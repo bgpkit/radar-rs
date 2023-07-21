@@ -29,7 +29,7 @@ fn main(){
 
 ## Data License
 
-The use of the Cloudflare data is under [`Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)`](https://creativecommons.org/licenses/by-nc/4.0/) license.
+The use of the Cloudflare data is under [`CC BY-SA 4.0`](https://creativecommons.org/licenses/by-nc/4.0/) license.
 
 This library does not provide any direct access to the API data.
 
