@@ -1,0 +1,20 @@
+[package]
+name = "radar-rs"
+authors = ["Mingwei Zhang <mingwei@bgpkit.com>"]
+version = "0.0.1"
+edition = "2021"
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/bgpkit/radar-rs"
+documentation = "https://docs.rs/radar-rs"
+description = """
+A unofficial library to access Cloudflare Radar data via CF API.
+"""
+keywords = ["cloudflare", "radar", "bgp"]
+
+[dependencies]
+
+dotenvy = "0.15.7"
+reqwest={version="0.11", features=["blocking", "json"]}
+serde={version="1.0", features=["derive"]}
+thiserror = "1.0"
