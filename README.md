@@ -11,7 +11,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-radar-rs = "0.0.1" 
+radar-rs = "0.0.2" 
 ```
 
 Add your API token to the environment variable `CF_API_TOKEN`.
