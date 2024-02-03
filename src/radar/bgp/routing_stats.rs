@@ -1,7 +1,7 @@
-use serde::{Deserialize, Serialize};
 use crate::radar::bgp::BgpRoutesMeta;
 use crate::radar::client::RadarClient;
 use crate::radar::error::RadarError;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct RoutingStatsEntry {
@@ -37,11 +37,16 @@ struct RoutingStatsResponse {
     pub success: bool,
 }
 
-impl RadarClient{
-
-    pub fn get_bgp_routing_stats(&self, asn: Option<u32>, country_code: Option<String>) -> Result<RoutingStatsResult, RadarError>{
+impl RadarClient {
+    pub fn get_bgp_routing_stats(
+        &self,
+        asn: Option<u32>,
+        country_code: Option<String>,
+    ) -> Result<RoutingStatsResult, RadarError> {
         if asn.is_some() && country_code.is_some() {
-            return Err(RadarError::InvalidParamsError("bgp_routing_stats: only one of asn or country code can be specified".to_string()));
+            return Err(RadarError::InvalidParamsError(
+                "bgp_routing_stats: only one of asn or country code can be specified".to_string(),
+            ));
         }
 
         let mut route = "radar/bgp/routes/stats".to_string();
@@ -52,7 +57,9 @@ impl RadarClient{
         }
         if let Some(code) = country_code {
             if code.len() != 2 {
-                return Err(RadarError::InvalidParamsError("bgp_routing_stats: country code must be 2 characters".to_string()));
+                return Err(RadarError::InvalidParamsError(
+                    "bgp_routing_stats: country code must be 2 characters".to_string(),
+                ));
             }
             params.push(format!("location={}", code));
         }
@@ -63,7 +70,9 @@ impl RadarClient{
 
         let response = self.send_request(route.as_str())?;
         if !response.status().is_success() {
-            return Err(RadarError::RequestError(response.error_for_status().unwrap_err()));
+            return Err(RadarError::RequestError(
+                response.error_for_status().unwrap_err(),
+            ));
         }
         Ok(response.json::<RoutingStatsResponse>()?.result)
     }
@@ -80,25 +89,29 @@ mod tests {
         // global routing table stats
         let res = client.get_bgp_routing_stats(None, None);
         assert!(res.is_ok());
-        assert!(res.unwrap().stats.routes_total>1_000_000);
+        assert!(res.unwrap().stats.routes_total > 1_000_000);
 
         // per_asn routing table stats
         let res = client.get_bgp_routing_stats(Some(13335), None);
         assert!(res.is_ok());
-        assert!(res.unwrap().stats.routes_total>1_000);
+        assert!(res.unwrap().stats.routes_total > 1_000);
 
         // per_asn routing table stats
         let res = client.get_bgp_routing_stats(None, Some("US".to_string()));
         assert!(res.is_ok());
-        assert!(res.unwrap().stats.routes_total>1_000);
+        assert!(res.unwrap().stats.routes_total > 1_000);
 
         // per_asn routing table stats
         let res = client.get_bgp_routing_stats(None, Some("us".to_string()));
         assert!(res.is_ok());
-        assert!(res.unwrap().stats.routes_total>1_000);
+        assert!(res.unwrap().stats.routes_total > 1_000);
 
         // error cases
-        assert!(client.get_bgp_routing_stats(None, Some("united stats".to_string())).is_err());
-        assert!(client.get_bgp_routing_stats(Some(13335), Some("US".to_string())).is_err());
+        assert!(client
+            .get_bgp_routing_stats(None, Some("united stats".to_string()))
+            .is_err());
+        assert!(client
+            .get_bgp_routing_stats(Some(13335), Some("US".to_string()))
+            .is_err());
     }
 }

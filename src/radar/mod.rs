@@ -1,8 +1,8 @@
-mod entities;
 mod bgp;
-mod error;
 mod client;
+mod entities;
+mod error;
 
-pub use error::RadarError;
-pub use client::RadarClient;
 pub use bgp::*;
+pub use client::RadarClient;
+pub use error::RadarError;
